@@ -82,6 +82,12 @@ const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 ```
 
 
+chalk 的使用
+
+> npm install chalk
+
+默认 node 在输出终端的文字都是黑白的，为了使输出不再单调，添加文字背景什么的，改变字体颜色什么的，我们可以使用 chalk.js 这个库。
+
 
 项目结构说明：
 

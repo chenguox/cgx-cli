@@ -23,8 +23,9 @@
   },
   "homepage": "https://github.com/chenguox/cgx-cli#readme",
   "dependencies": {
-    "chalk": "^5.0.1",
+    "chalk": "^4.1.0",
     "commander": "^9.4.0",
-    "download-git-repo": "^3.0.2"
+    "download-git-repo": "^3.0.2",
+    "open": "^8.4.0"
   }
 }
