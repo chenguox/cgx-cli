@@ -23,12 +23,50 @@ const downloadRepo = promisify(require('download-git-repo'));
 
 
 
-在 Node 程序中执行终端命令
+### 在 Node 程序中执行终端命令
 
-使用 child_process 来开启一个子进程来执行我们的终端命令，可以使用 spawn 或者 exec，两个都可以，spawn 更接近于底层。因为终端命令可能需要重复使用到，我们创建 terminal.js 文件，将需要使用的命令封装到这里。
+1、使用 child_process 来开启一个子进程来执行我们的终端命令，可以使用 spawn 或者 exec，两个都可以，spawn 更接近于底层。
 
+> const { spawn, exec } =require('child_process');
 
-执行终端命令 npm install
+2、因为终端命令可能需要重复使用到，我们创建 terminal.js 文件，将需要使用的命令封装到这里。（具体代码，看 utils / terminal.js）
+
+```
+const spawnCommand = (...args) => {
+  return new Promise((resole, reject) => {
+    const childProcess = spawn(...args);
+    childProcess.stdout.pipe(process.stdout);
+    childProcess.stderr.pipe(process.stderr);
+    childProcess.on('close', () => {
+      resole();
+    })
+  })
+}
+```
+
+3、childProcess 是我们开启的另外一个子进程，我们需要这个 子进程执行 npm install，但是我们知道，进程中会有很多执行命令的过程中的打印信息，这些信息在我们的主进程是看不到的，childProcess 提供了一个 stdout 通过管道的方式，将流传输到 process.stdout ( process 是我们的进程，存着很多信息)
+
+```
+// 将子进程流的信息放到 process进程的 stdout 中
+childProcess.stdout.pipe(process.stdout);
+// 当然，也可将一些错误的信息放入到 process 进程的 stderr 中
+childProcess.stderr.pipe(process.stderr);
+```
+
+监听 close 事件，在 npm install 执行完告诉我们，处理成 promise
+
+```
+ return new Promise((resole, reject) => {
+    const childProcess = spawn(...args);
+    childProcess.stdout.pipe(process.stdout);
+    childProcess.stderr.pipe(process.stderr);
+    childProcess.on('close', () => {
+      resole();
+    })
+  })
+```
+
+4、使用我们封装好的 spawn 函数执行终端命令 npm install
 
 ```
 const terminal = require('../utils/terminal');
@@ -36,7 +74,7 @@ const terminal = require('../utils/terminal');
 await terminal.spawn('npm', ['install'], { cwd: `./${project}` });
 ```
 
-上面执行 'npm'，跑在 window 上是会报错的，因为 window 上的命令本质上执行的不是 npm, 而是 npm.cmd。即虽然我们执行 npm install，但是本质上是帮助我们执行 npm.cmd。但是，我们自己通过 spawn 是不会自动帮我们添加 cmd 的
+5、但是，上面的代码是不严谨的，跑在 window 上是会报错的，因为 window 上的命令本质上执行的不是 npm, 而是 npm.cmd。即虽然我们执行 npm install，但是本质上是帮助我们执行 npm.cmd。但是，我们自己通过 spawn 是不会自动帮我们添加 cmd 的，所以，做个兼容判断。
 
 ```
 // 判断我们的平台是否是 window 电脑
