@@ -89,7 +89,16 @@ chalk 的使用
 默认 node 在输出终端的文字都是黑白的，为了使输出不再单调，添加文字背景什么的，改变字体颜色什么的，我们可以使用 chalk.js 这个库。
 
 
-项目结构说明：
+使用 ejs 模板
+
+ejs模板是需要编译的，所以这里我们封装一个工具
+
+> npm install ejs
+
+创建组件的流程
+
+
+## 项目结构说明：
 
 config :  相关配置文件，比如配置了重哪里下载我们的模板项目
 
@@ -97,8 +106,12 @@ template ：相关的 ejs 模板
 
 utils ：工具的封装
 
+* file : 处理ejs模板输出文件
+* log : 控制台打印
+* terminal : 终端命令
+
 core ：核心模块
 
-- action :
+- action :  执行的action操作
 - create :  指令统一写在这里
-- help ：
+- help ：帮助
