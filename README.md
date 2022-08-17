@@ -4,7 +4,7 @@
 
 如何安装？
 
-> npm  install coderwhy -g
+> npm  install cgx -g
 
 ## 创建项目
 
@@ -25,7 +25,7 @@
 
 > cgx create you_project_name
 
-自动拉取项目模板、安装项目依赖、打开浏览器 http://localhost:5173、自动启动项目
+自动拉取项目模板、安装项目依赖、打开浏览器 `http://localhost:5173`、自动启动项目
 
 ## 项目开发
 
